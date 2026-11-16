@@ -55,6 +55,20 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 | 비포/애프터 | 화면 좌우 분할 대신 **위아래 분할**(9:16), 가운데 선이 와이프 |
 | 엔딩 / CTA | 로고·핸들 등장 후 "저장해두세요" 같은 한 줄, 마지막 1초는 정지 |
 
+### 효과 라이브러리 (기본 기능으로 부족할 때만)
+
+쓰기 전에 `references/libraries.md` 를 **반드시** 읽는다. (seed 고정·좌표·필터 함정이 정리돼 있음)
+
+| 요청에 이런 말이 있으면 | 라이브러리 | 템플릿 |
+| --- | --- | --- |
+| 떨어지는, 튕기는, 쌓이는, 물리 | Matter.js | `templates/PhysicsWords.tsx` |
+| 손그림, 스케치, 낙서, 다이어그램 | Rough.js | `templates/SketchDiagram.tsx` |
+| 글리치, 네온, 글로우, 지지직, ASCII, 볼록 | PixiJS + pixi-filters | `templates/PixiGlitch.tsx` |
+| 순서대로, 안무, 글자 하나씩, 선이 그려지는 | Anime.js | `templates/AnimeTimeline.tsx` |
+| 형광펜, 마커, 연필, 붓, 수채화 | p5.brush | `templates/BrushHighlight.tsx` |
+
+`motion-style.md` 의 '하지 말 것' 에 걸리는 효과(예: 글리치 금지)는 요청이 있어도 먼저 확인한다.
+
 ## 5. 결과 보고 방식
 
 - 렌더 후: 파일 경로, 길이(초), 장면 표, 그리고 **수정하기 쉬운 값**(문장·색·속도 상수 위치)을 알려준다.
