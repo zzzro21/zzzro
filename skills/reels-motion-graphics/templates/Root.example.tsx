@@ -1,0 +1,27 @@
+import { Composition } from "remotion";
+import { PROFILE } from "./brand";
+import { KineticHook, kineticHookDefaults } from "./KineticHook";
+import { PhysicsWords, physicsWordsDefaults } from "./PhysicsWords";
+import { SketchDiagram, sketchDiagramDefaults } from "./SketchDiagram";
+import { AnimeTimeline, animeTimelineDefaults } from "./AnimeTimeline";
+import { BrushHighlight, brushHighlightDefaults } from "./BrushHighlight";
+import { ThinkingOrbs, thinkingOrbsDefaults } from "./ThinkingOrbs";
+import { BeatDayAnswer, beatDayAnswerDefaults } from "./BeatDayAnswer";
+import { StatsLaunch, statsLaunchDefaults } from "./StatsLaunch";
+import { PixiGlitch, pixiGlitchDefaults } from "./PixiGlitch";
+import { ChapterCard, chapterCardDefaults, LowerThird, lowerThirdDefaults } from "./LongformKit";
+// 채널(brand.ts)에 따라 크기가 자동으로 바뀜
+const v = { fps: PROFILE.fps, width: PROFILE.width, height: PROFILE.height };
+export const RemotionRoot = () => (<>
+  <Composition id="KineticHook" component={KineticHook} durationInFrames={90} {...v} defaultProps={kineticHookDefaults} />
+  <Composition id="PhysicsWords" component={PhysicsWords} durationInFrames={120} {...v} defaultProps={physicsWordsDefaults} />
+  <Composition id="SketchDiagram" component={SketchDiagram} durationInFrames={90} {...v} defaultProps={sketchDiagramDefaults} />
+  <Composition id="PixiGlitch" component={PixiGlitch} durationInFrames={75} {...v} defaultProps={pixiGlitchDefaults} />
+  <Composition id="AnimeTimeline" component={AnimeTimeline} durationInFrames={75} {...v} defaultProps={animeTimelineDefaults} />
+  <Composition id="BrushHighlight" component={BrushHighlight} durationInFrames={60} {...v} defaultProps={brushHighlightDefaults} />
+  <Composition id="ThinkingOrbs" component={ThinkingOrbs} durationInFrames={120} {...v} defaultProps={thinkingOrbsDefaults} />
+  <Composition id="BeatDayAnswer" component={BeatDayAnswer} durationInFrames={360} {...v} defaultProps={beatDayAnswerDefaults} />
+  <Composition id="StatsLaunch" component={StatsLaunch} durationInFrames={360} {...v} defaultProps={statsLaunchDefaults} />
+  <Composition id="ChapterCard" component={ChapterCard} durationInFrames={75} {...v} defaultProps={chapterCardDefaults} />
+  <Composition id="LowerThird" component={LowerThird} durationInFrames={120} {...v} defaultProps={lowerThirdDefaults} />
+</>);

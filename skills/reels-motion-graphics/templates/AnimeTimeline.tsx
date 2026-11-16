@@ -26,7 +26,8 @@ export const animeTimelineDefaults: AnimeTimelineProps = {
 
 export const AnimeTimeline: React.FC<AnimeTimelineProps> = ({ kicker, title, tags }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width, height } = useVideoConfig();
+  const landscape = width > height;
   const root = useRef<HTMLDivElement>(null);
   const tl = useRef<Timeline | null>(null);
 
@@ -71,7 +72,7 @@ export const AnimeTimeline: React.FC<AnimeTimelineProps> = ({ kicker, title, tag
       <div
         style={{
           position: "absolute",
-          top: SAFE.top + 380,
+          top: landscape ? SAFE.top + 90 : SAFE.top + 380,
           left: SAFE.side,
           right: SAFE.side,
           color: BRAND.text,
@@ -115,7 +116,7 @@ export const AnimeTimeline: React.FC<AnimeTimelineProps> = ({ kicker, title, tag
             </div>
           ))}
         </div>
-        <div style={{ display: "flex", gap: 22, marginTop: 120, justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: 22, marginTop: landscape ? 60 : 120, justifyContent: "center" }}>
           {Array.from({ length: 7 }).map((_, i) => (
             <div
               key={i}

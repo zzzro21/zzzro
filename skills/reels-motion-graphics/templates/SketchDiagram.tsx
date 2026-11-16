@@ -12,6 +12,7 @@ import {
   Easing,
   interpolate,
   useCurrentFrame,
+  useVideoConfig,
 } from "remotion";
 import { BRAND, SAFE } from "./KineticHook";
 
@@ -54,18 +55,23 @@ const DrawnPath: React.FC<{
 
 export const SketchDiagram: React.FC<SketchDiagramProps> = ({ steps, boil }) => {
   const frame = useCurrentFrame();
+  const { width: W, height: H } = useVideoConfig();
+  const cx = W / 2;
+  // 세로(9:16)는 위→아래, 가로(16:9)는 박스를 줄여서 위→아래 유지
+  const boxH = H < W ? Math.min(BOX_H, (H - SAFE.top - SAFE.bottom - (steps.length - 1) * 60) / steps.length) : BOX_H;
+  const gap = H < W ? 60 : GAP;
   // boil: 4프레임마다 seed 를 바꿔서 손그림 애니메이션 느낌 (항상 1 이상이어야 고정됨)
   const seedBase = boil ? Math.floor(frame / 4) * 7 + 1 : 1;
 
-  const x = (1080 - BOX_W) / 2;
-  const totalH = steps.length * BOX_H + (steps.length - 1) * GAP;
-  const top = SAFE.top + (1920 - SAFE.top - SAFE.bottom - totalH) / 2;
+  const x = (W - BOX_W) / 2;
+  const totalH = steps.length * boxH + (steps.length - 1) * gap;
+  const top = SAFE.top + (H - SAFE.top - SAFE.bottom - totalH) / 2;
 
   return (
     <AbsoluteFill style={{ background: "#FAF7F0", fontFamily: BRAND.font }}>
-      <svg width={1080} height={1920}>
+      <svg width={W} height={H}>
         {steps.map((label, i) => {
-          const y = top + i * (BOX_H + GAP);
+          const y = top + i * (boxH + gap);
           const start = i * PER_STEP;
           const p = interpolate(frame, [start, start + 14], [0, 1], {
             extrapolateLeft: "clamp",
@@ -73,7 +79,7 @@ export const SketchDiagram: React.FC<SketchDiagramProps> = ({ steps, boil }) => 
             easing: Easing.out(Easing.quad),
           });
           const isLast = i === steps.length - 1;
-          const box = gen.rectangle(x, y, BOX_W, BOX_H, {
+          const box = gen.rectangle(x, y, BOX_W, boxH, {
             seed: seedBase + i,
             roughness: 1.6,
             strokeWidth: 5,
@@ -87,8 +93,8 @@ export const SketchDiagram: React.FC<SketchDiagramProps> = ({ steps, boil }) => 
             i < steps.length - 1
               ? gen.linearPath(
                   [
-                    [540, y + BOX_H + 18],
-                    [540, y + BOX_H + GAP - 22],
+                    [cx, y + boxH + 18],
+                    [cx, y + boxH + gap - 22],
                   ],
                   { seed: seedBase + 50 + i, roughness: 1.4, strokeWidth: 5 },
                 )
@@ -97,9 +103,9 @@ export const SketchDiagram: React.FC<SketchDiagramProps> = ({ steps, boil }) => 
             i < steps.length - 1
               ? gen.linearPath(
                   [
-                    [505, y + BOX_H + GAP - 55],
-                    [540, y + BOX_H + GAP - 20],
-                    [575, y + BOX_H + GAP - 55],
+                    [cx - 35, y + boxH + gap - 55],
+                    [cx, y + boxH + gap - 20],
+                    [cx + 35, y + boxH + gap - 55],
                   ],
                   { seed: seedBase + 90 + i, roughness: 1.2, strokeWidth: 5 },
                 )
@@ -138,8 +144,8 @@ export const SketchDiagram: React.FC<SketchDiagramProps> = ({ steps, boil }) => 
                   : null,
               )}
               <text
-                x={540}
-                y={y + BOX_H / 2 + 26}
+                x={cx}
+                y={y + boxH / 2 + 26}
                 textAnchor="middle"
                 fontSize={76}
                 fontWeight={800}

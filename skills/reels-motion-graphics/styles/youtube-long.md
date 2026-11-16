@@ -1,0 +1,42 @@
+# 유튜브 롱폼 스타일
+
+> 렌더: `--props='{"channel":"youtube-long"}'` · 수치는 `templates/brand.ts` 의 `youtube-long` 프로필
+> 색·폰트·핸들은 세 채널 공통(`BRAND_CORE`). 여기는 **롱폼에서만 다른 점**.
+
+## 목표
+- 모션그래픽은 주인공이 아니라 **이해를 돕는 장치**. 촬영 영상 사이사이에 들어간다.
+- 몇 분씩 보므로 **눈이 피곤하지 않게, 매번 같은 모양으로** (반복되는 장치 = 채널 브랜딩).
+
+## 캔버스
+- 1920×1080, 30fps
+- 안전영역: 위 90 · 아래 110 · 좌우 140 (TV·자막 고려한 타이틀 세이프)
+- **엔드스크린(마지막 5~20초)**: 화면 오른쪽 2/3 는 영상·구독 버튼 카드 자리 → 비워두고 왼쪽에 한 줄만.
+- 자막(CC)이 아래에 뜨므로 하단 중앙에 중요한 글자 금지.
+
+## 글자
+- 헤드라인 120 · 제목 84 · 본문 48 · 캡션 34 (px)
+- 정보 밀도는 높여도 되지만 한 화면 한 메시지는 유지.
+
+## 리듬
+- 장면(그래픽 컷) 3–6초, stagger 10프레임, 등장 14프레임
+- BGM 기본 96 BPM, 내레이션 밑에 깔리는 수준(-20dB 이하)
+- 에너지: **차분** — 플래시·흔들림·글리치는 쓰지 않는다 (오프닝 5초 제외).
+- 인트로는 5초 이내.
+
+## 고정 장치 (LongformKit.tsx)
+| 장치 | 언제 | 템플릿 |
+| --- | --- | --- |
+| 챕터 카드 | 챕터 바뀔 때 2~3초 | ChapterCard (번호·제목·진행 점) |
+| 하단 자막바 | 처음 등장할 때, 게스트 소개 | LowerThird → `transparent: true` + ProRes 4444 로 렌더해서 촬영본 위에 |
+| 데이터 설명 | 숫자·비교 | StatsLaunch (차트 자동 축소됨) |
+| 과정 설명 | 단계·흐름 | SketchDiagram, AnimeTimeline |
+| AI 작업 장면 | 툴 시연 사이 | ThinkingOrbs |
+
+투명 배경 렌더:
+```bash
+npx remotion render src/index.ts LowerThird out/lower.mov --props='{"channel":"youtube-long","transparent":true}' \
+  --codec=prores --prores-profile=4444 --pixel-format=yuva444p10le --image-format=png
+```
+
+## 배운 것 (피드백 받을 때마다 추가)
+-

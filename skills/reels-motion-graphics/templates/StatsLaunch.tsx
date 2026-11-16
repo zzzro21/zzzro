@@ -66,7 +66,7 @@ const fmt = (v: number, target: number) =>
 
 export const StatsLaunch: React.FC<StatsLaunchProps> = (p) => {
   const frame = useCurrentFrame();
-  const { fps, width } = useVideoConfig();
+  const { fps, width, height } = useVideoConfig();
   const fpb = (60 / p.bpm) * fps;
   const bar = fpb * 4;
   const KPI = Math.round(bar * 1); // 2s
@@ -124,7 +124,7 @@ export const StatsLaunch: React.FC<StatsLaunchProps> = (p) => {
 
   // 2) 매출 막대그래프 (4~8s, 빌드업) — 막대 1박에 하나씩, 착지 pop / 마지막 막대만 강조색
   const maxV = Math.max(...p.quarters.map((q) => q.value));
-  const chartH = 760;
+  const chartH = Math.min(760, height - SAFE.top - SAFE.bottom - 320); // 16:9 에선 자동 축소
   if (frame >= CHART && frame < DROP) {
     const title = interpolate(frame, [CHART, CHART + 8], [0, 1], { ...clamp, easing: easeOut });
     const barW = (W - (p.quarters.length - 1) * 40) / p.quarters.length;
@@ -193,7 +193,7 @@ export const StatsLaunch: React.FC<StatsLaunchProps> = (p) => {
         {scene}
       </AbsoluteFill>
       {p.fictional && (
-        <div style={{ position: "absolute", bottom: SAFE.bottom - 80, width: "100%", textAlign: "center", fontSize: 30, color: "#6A6A72" }}>
+        <div style={{ position: "absolute", bottom: Math.max(16, SAFE.bottom - 80), width: "100%", textAlign: "center", fontSize: 30, color: "#6A6A72" }}>
           ※ 회사·수치는 가상 데이터입니다
         </div>
       )}

@@ -81,11 +81,14 @@ const Orb: React.FC<{ state: OrbState; px: number; opacity: number; scale: numbe
   );
 };
 
-export const ThinkingOrbs: React.FC<ThinkingOrbsProps> = ({ steps, framesPerStep, orbPx }) => {
+export const ThinkingOrbs: React.FC<ThinkingOrbsProps> = ({ steps, framesPerStep, orbPx: orbPxProp }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const landscape = width > height;
+  const orbPx = landscape ? Math.min(orbPxProp, Math.round(height * 0.5)) : orbPxProp; // 16:9 에선 줄임
   const FADE = 8; // 상태 전환 겹치는 프레임
 
-  const orbTop = SAFE.top + 260;
+  const orbTop = landscape ? Math.round((height - orbPx - 230) / 2) : SAFE.top + 260;
 
   return (
     <AbsoluteFill style={{ background: BRAND.bg, fontFamily: BRAND.font }}>

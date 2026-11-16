@@ -1,4 +1,4 @@
-// 릴스 첫 3초 훅용 키네틱 타이포그래피 템플릿 (1080x1920, 30fps)
+// 첫 3초 훅용 키네틱 타이포그래피 템플릿 (채널별 크기·속도는 brand.ts)
 // 사용: Root.tsx 에서 <Composition component={KineticHook} ... /> 로 등록
 import React from "react";
 import {
@@ -10,16 +10,9 @@ import {
   useVideoConfig,
 } from "remotion";
 
-// ── 브랜드 토큰: motion-style.md 와 값을 맞춰 두세요 ──────────────────
-export const BRAND = {
-  bg: "#0E0E10",
-  text: "#FFFFFF",
-  accent: "#FF4D2E",
-  font: "'Pretendard', 'Noto Sans KR', 'Noto Sans CJK KR', sans-serif",
-};
-
-// 릴스 UI(프로필·캡션·버튼)에 가리지 않는 안전 영역
-export const SAFE = { top: 220, bottom: 420, side: 90 };
+import { BRAND, SAFE, PROFILE } from "./brand";
+// 브랜드 색·폰트와 채널별 안전영역은 brand.ts 에서 관리 (다른 템플릿도 여기서 re-export 받아 씀)
+export { BRAND, SAFE };
 
 export type KineticHookProps = {
   lines: string[]; // 한 줄씩 등장할 문장
@@ -31,7 +24,7 @@ export const kineticHookDefaults: KineticHookProps = {
   highlight: "1만",
 };
 
-const STAGGER = 8; // 줄 사이 간격(프레임)
+const STAGGER = PROFILE.pace.stagger; // 줄 사이 간격(프레임) — 채널별
 
 const Line: React.FC<{ text: string; index: number; highlight: string }> = ({
   text,
@@ -70,7 +63,7 @@ const Line: React.FC<{ text: string; index: number; highlight: string }> = ({
       style={{
         transform: `translateY(${y}px)`,
         opacity,
-        fontSize: 112,
+        fontSize: PROFILE.type.headline,
         fontWeight: 800,
         lineHeight: 1.15,
         letterSpacing: "-0.03em",
@@ -125,7 +118,7 @@ export const KineticHook: React.FC<KineticHookProps> = ({ lines, highlight }) =>
     <AbsoluteFill style={{ background: BRAND.bg, fontFamily: BRAND.font }}>
       <AbsoluteFill
         style={{
-          padding: `${SAFE.top}px ${SAFE.side}px ${SAFE.bottom}px`,
+          padding: `${SAFE.top}px ${SAFE.right}px ${SAFE.bottom}px ${SAFE.left}px`,
           justifyContent: "center",
           transform: `scale(${drift}) translateY(${-exit * 120}px)`,
           opacity: 1 - exit,
