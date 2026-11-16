@@ -66,6 +66,7 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 | 글리치, 네온, 글로우, 지지직, ASCII, 볼록 | PixiJS + pixi-filters | `templates/PixiGlitch.tsx` |
 | 순서대로, 안무, 글자 하나씩, 선이 그려지는 | Anime.js | `templates/AnimeTimeline.tsx` |
 | 형광펜, 마커, 연필, 붓, 수채화 | p5.brush | `templates/BrushHighlight.tsx` |
+| AI 생각 중, 로딩, 분석 중, 검색 중 | thinking-orbs | `templates/ThinkingOrbs.tsx` |
 
 `motion-style.md` 의 '하지 말 것' 에 걸리는 효과(예: 글리치 금지)는 요청이 있어도 먼저 확인한다.
 

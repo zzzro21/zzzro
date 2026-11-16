@@ -1,8 +1,8 @@
 # 효과 라이브러리 레시피 (Remotion 에서 쓰기)
 
-Remotion 기본 기능(interpolate·spring)만으로 부족할 때 꺼내 쓰는 라이브러리 5개.
+Remotion 기본 기능(interpolate·spring)만으로 부족할 때 꺼내 쓰는 라이브러리 6개.
 모든 템플릿은 `templates/` 에 있고, 1080x1920·30fps 로 **실제 렌더 테스트를 통과**했다.
-(remotion 4.0.544 / matter-js 0.20.0 / roughjs 4.6.6 / pixi.js 8.23.0 + pixi-filters 6.1.5 / animejs 4.5.0 / p5.brush 3.0.0)
+(remotion 4.0.544 / matter-js 0.20.0 / roughjs 4.6.6 / pixi.js 8.23.0 + pixi-filters 6.1.5 / animejs 4.5.0 / p5.brush 3.0.0 / thinking-orbs 0.3.2)
 
 ## 0. 공통 원칙 — "같은 프레임은 언제 렌더해도 같은 그림"
 
@@ -23,6 +23,7 @@ Remotion 은 프레임을 **순서 없이, 여러 탭에서 동시에** 렌더�
 | 글리치·글로우·볼록 왜곡·ASCII | PixiJS + pixi-filters | `PixiGlitch.tsx` | `npm i pixi.js pixi-filters` |
 | 글자·도형·SVG 선을 한 타임라인으로 안무 | Anime.js v4 | `AnimeTimeline.tsx` | `npm i animejs` |
 | 마커·연필·목탄 붓 자국, 수채화 얼룩 | p5.brush (standalone) | `BrushHighlight.tsx` + `p5brush.d.ts` | `npm i p5.brush` |
+| AI 가 생각 중인 점 구체 (검색·풀이·작성…) | thinking-orbs | `ThinkingOrbs.tsx` | `npm i thinking-orbs` |
 
 > 한 영상에 라이브러리는 **1~2개만**. 효과가 섞이면 싸 보인다.
 
@@ -59,6 +60,14 @@ Remotion 은 프레임을 **순서 없이, 여러 탭에서 동시에** 렌더�
 - `scaleBrushes(2~3)` 로 1080 해상도에 맞게 굵기 보정. 기본 붓: `2B, HB, 2H, cpencil, pen, rotring, spray, marker, marker2, charcoal, hatch_brush`.
 - 그려지는 효과: 선 끝점을 progress 만큼만 늘린다. 수채화는 `fill(색, 투명도)` + `fillBleed` + `fillTexture`.
 - 글자는 브러시로 안 되니 React `<div>` 로 캔버스 위에 얹는다.
+
+### thinking-orbs (AI 생각 중 구체)
+- ⚠️ `<ThinkingOrb>` 컴포넌트는 내부가 `performance.now()`(실제 시계) 기반이라 **Remotion 에서 그대로 쓰면 안 된다.**
+- 대신 `thinking-orbs/engine` 의 `resolvePreset(state, 64)` → `MODE_FRAMES[mode](64, t, opts)` → `paintFrame(ctx, frame, dark, tint)`. 시간은 `t = frame/fps × preset.speed`.
+- 프리셋은 64px 기준 튜닝 → 64 로 계산하고 `ctx.setTransform(k,0,0,k,0,0)` (k = 그릴 px / 64) 로 확대. 벡터 원이라 선명함.
+- 9가지 상태: `working`(궤도 입자) `searching`(지구본 스캔) `solving`(큐브처럼 섞였다 맞춰짐) `listening`(파형) `connecting`(별자리 연결) `weaving`(세 가닥 땋기) `composing`(물결 띠) `breathing`(숨쉬는 링) `shaping`(원→삼각형→사각형).
+- `dark=true` 는 어두운 배경용(밝은 점). 색은 `tint {r,g,b}` 로 브랜드색 입히기 가능.
+- 릴스 활용: "AI 한테 시켰더니…" 류 콘텐츠에서 AI 작업 장면, 로딩/전환 브릿지, 상태 라벨과 함께 2~4초.
 
 ## 3. 렌더 명령
 

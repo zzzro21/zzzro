@@ -175,7 +175,7 @@ reels-motion-graphics 스킬로 훅 인트로 만들어줘.
 
 ---
 
-## 🎨 STEP 4+. 효과 라이브러리 5종 — 한 단계 위 퀄리티
+## 🎨 STEP 4+. 효과 라이브러리 6종 — 한 단계 위 퀄리티
 
 > 💡 기본 모션만으로 밋밋할 때, 무료 오픈소스 라이브러리를 붙이면 **애프터이펙트 같은 효과**가 나와요.
 > 단, 그냥 붙이면 렌더할 때마다 결과가 달라지거나 화면이 깨져요. 그래서 스킬에 **테스트 통과한 템플릿 + 주의사항**을 같이 넣어뒀어요.
@@ -187,12 +187,13 @@ reels-motion-graphics 스킬로 훅 인트로 만들어줘.
 | **PixiJS + filters** | 글리치, 네온 글로우, 볼록 왜곡, ASCII | "글리치 / 글로우" |
 | **Anime.js** | 글자 하나씩 + 선 그려짐 + 태그 팝업을 한 박자로 | "순서대로 착착" |
 | **p5.brush** | 형광펜 밑줄, 연필 체크, 수채화 얼룩 | "형광펜 / 수채화" |
+| **thinking-orbs** | AI가 생각하는 듯한 점 구체 (검색·풀이·작성 9가지) | "AI 생각 중" |
 
 ### 처음 한 번 — 설치
 
 ```
 reels-motion-graphics 스킬의 references/libraries.md 를 읽고,
-템플릿 5개(PhysicsWords, SketchDiagram, PixiGlitch, AnimeTimeline, BrushHighlight)에
+템플릿 6개(PhysicsWords, SketchDiagram, PixiGlitch, AnimeTimeline, BrushHighlight, ThinkingOrbs)에
 필요한 라이브러리를 설치해서 Root.tsx 에 전부 등록해줘.
 각각 대표 프레임 1장씩 still 로 뽑아서 보여줘.
 ```
@@ -230,6 +231,13 @@ AnimeTimeline 템플릿으로 만들어줘.
 ```
 BrushHighlight 템플릿으로 "[예: 저장해두면 / 평생 써먹는 문장]" 만들어줘.
 두 번째 줄에 형광펜 밑줄, 옆에 연필 체크, 뒤에 수채화 얼룩.
+```
+
+**⑥ AI 생각 중 — "AI한테 시켰더니" 콘텐츠**
+```
+ThinkingOrbs 템플릿으로 만들어줘.
+상태 순서: [예: searching "경쟁사 분석 중" → solving "전략 짜는 중" → composing "카피 쓰는 중"]
+상태당 1.3초. 점 색은 내 강조색으로.
 ```
 
 > 🚨 **한 영상에 효과는 1~2개만!** 글리치+수채화+물리 다 섞으면 오히려 싸 보여요.
@@ -282,4 +290,5 @@ BrushHighlight 템플릿으로 "[예: 저장해두면 / 평생 써먹는 문장]
 - PixiJS 👉 https://pixijs.com/ · 필터 모음 👉 https://github.com/pixijs/filters
 - Anime.js 👉 https://animejs.com/
 - p5.brush 👉 https://github.com/acamposuribe/p5.brush
+- thinking-orbs 👉 https://github.com/Jakubantalik/thinking-orbs
 - Remotion 은 개인·소규모 팀은 무료, 일정 규모 이상 회사는 유료 라이선스가 필요해요 👉 https://www.remotion.dev/license

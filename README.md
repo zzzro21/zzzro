@@ -11,7 +11,7 @@
 
 | 스킬 | 하는 일 |
 | --- | --- |
-| [reels-motion-graphics](skills/reels-motion-graphics/) | 릴스·쇼츠용 9:16 모션그래픽을 Remotion 으로 만들어 MP4 렌더 (물리·손그림·글리치·안무·붓 효과 템플릿 포함) |
+| [reels-motion-graphics](skills/reels-motion-graphics/) | 릴스·쇼츠용 9:16 모션그래픽을 Remotion 으로 만들어 MP4 렌더 (물리·손그림·글리치·안무·붓·AI 구체 효과 템플릿 포함) |
 
 ## 참고 자료
 
