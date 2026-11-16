@@ -85,7 +85,8 @@ export const TalkingOverlay: React.FC<TalkingOverlayProps> = (p) => {
 
   // ── 자막: 3~4단어씩 묶어 한 덩어리, 단어가 말하는 순간 하나씩 등장 ──
   const groups: { t: number; text: string }[][] = [];
-  p.captions.forEach((c, i) => { const g = groups[groups.length - 1]; const breakHere = !g || g.length >= 4 || /[.,!?]$/.test(p.captions[i - 1]?.text ?? ""); breakHere ? groups.push([c]) : g.push(c); });
+  p.captions.forEach((c, i) => { const g = groups[groups.length - 1]; const gap = i > 0 ? c.t - p.captions[i - 1].t : 0; // 말 사이가 0.9초 넘게 비면 새 덩어리
+    const breakHere = !g || g.length >= 4 || gap > 0.9 || /[.,!?]$/.test(p.captions[i - 1]?.text ?? ""); breakHere ? groups.push([c]) : g.push(c); });
   const gi = groups.findLastIndex((g) => t >= g[0].t);
   const grp = gi >= 0 ? groups[gi] : null;
   const grpEnd = gi >= 0 ? (groups[gi + 1]?.[0].t ?? grp![grp!.length - 1].t + 1.2) : 0;

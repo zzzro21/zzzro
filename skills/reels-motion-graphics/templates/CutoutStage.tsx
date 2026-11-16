@@ -12,7 +12,7 @@ import { FONTS } from "./fonts";
 import { TalkingOverlay, TalkingOverlayProps, talkingOverlayDefaults } from "./TalkingOverlay";
 
 type Bg = "original" | "sunburst" | "speed" | "popart" | "dusk" | "grid";
-export type CutScene = { from: number; to: number; bg: Bg; behindText?: string; outline?: boolean; tone?: "none" | "mono" | "comic"; label?: string };
+export type CutScene = { from: number; to: number; bg: Bg; behindText?: string; behindY?: number /* 0~1, 뒤쪽 사람 얼굴을 덮지 않는 높이로 */; outline?: boolean; tone?: "none" | "mono" | "comic"; label?: string };
 export type CutoutStageProps = {
   original: string;        // public/ 기준 원본 촬영본
   person: string;          // public/ 기준 person.webm (person_matte.py 결과)
@@ -93,7 +93,7 @@ export const CutoutStage: React.FC<CutoutStageProps> = ({ original, person, clip
         : <BgLayer kind={sc.bg} t={t} W={W} H={H} />}
       {/* ② 사람 뒤 글자 */}
       {sc.behindText && (
-        <div style={{ position: "absolute", top: H * 0.2, left: 0, whiteSpace: "nowrap", transform: `translateX(${W * 0.3 - local * 520}px) rotate(-4deg)`,
+        <div style={{ position: "absolute", top: H * (sc.behindY ?? 0.2), left: 0, whiteSpace: "nowrap", transform: `translateX(${W * 0.3 - local * 520}px) rotate(-4deg)`,
           fontFamily: FONTS.pop, fontSize: 340, lineHeight: 1, color: sc.bg === "original" ? "#FFE03D" : "#FFFFFF", WebkitTextStroke: "14px #1E1E24", paintOrder: "stroke fill",
           textShadow: "0 18px 0 #1E1E24", opacity: interpolate(local, [0, 0.15], [0, 1], { extrapolateRight: "clamp" }) }}>
           {sc.behindText} {sc.behindText}

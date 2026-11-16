@@ -50,6 +50,7 @@ def main():
     ap.add_argument("--smooth", type=float, default=0.3, help="시간 방향 평활화 0~0.9 (높을수록 덜 떨림, 빠른 동작은 끌림)")
     ap.add_argument("--edge", type=float, default=0.8, help="가장자리 부드럽게 (px)")
     ap.add_argument("--prores", action="store_true", help="ProRes 4444 .mov 도 함께 출력")
+    ap.add_argument("--all-people", action="store_true", help="모든 사람 유지 (기본: 가장 큰 사람 = 주인공만. 셀카 모델은 뒤쪽 작은 사람을 반쯤만 잡아 깜빡이므로)")
     a = ap.parse_args()
 
     import cv2
@@ -86,12 +87,24 @@ def main():
         res = seg.segment_for_video(mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb), int(n * 1000 / fps))
         bg = res.confidence_masks[0].numpy_view()  # 0번 클래스 = 배경
         person = 1.0 - cv2.resize(bg, (W, H), interpolation=cv2.INTER_CUBIC)
-        # 가장자리 정리: 대비 올리기(반투명 줄이기) → 시간 평활화 → 살짝 흐리게
+        # 주인공 영역: 경계 다듬기 '전' 원래 마스크로 덩어리를 나눈다 (다듬기 필터가 옆사람과 이어 붙이는 것 방지)
+        keep = None
+        if not a.all_people:  # 주인공(가장 큰 덩어리)만 → 뒤쪽 사람이 반투명하게 깜빡이는 것 방지
+            k = max(15, int(min(W, H) / 30)) | 1  # 가는 연결(머리카락끼리 닿은 곳)을 끊을 만큼 깎는다
+            core = cv2.erode((person > 0.5).astype(np.uint8), np.ones((k, k), np.uint8))
+            nlab, lab, stats, _ = cv2.connectedComponentsWithStats(core, 8)
+            if nlab >= 2:
+                keep = (lab == 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))).astype(np.uint8)
+                keep = cv2.dilate(keep, np.ones((k + 24, k + 24), np.uint8)).astype(np.float32)  # 깎은 만큼 + 여유 되돌리기
+                keep = np.clip(cv2.GaussianBlur(keep, (0, 0), 6), 0, 1)
+        # 가장자리 정리: 실제 윤곽에 맞춤 → 대비 올리기(반투명 줄이기) → 주인공 밖 지우기
         gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255.0
         r = max(8, int(min(W, H) / 60))
-        person = guided(gray, person.astype(np.float32), r, 1e-3)   # 경계를 실제 윤곽에 맞춤
+        person = guided(gray, person.astype(np.float32), r, 1e-3)
         person = np.clip((person - 0.25) / 0.5, 0, 1)
         person = person * person * (3 - 2 * person)
+        if keep is not None:
+            person = person * keep
         if prev is not None:
             person = a.smooth * prev + (1 - a.smooth) * person
         prev = person

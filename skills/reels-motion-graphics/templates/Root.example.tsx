@@ -35,5 +35,5 @@ export const RemotionRoot = () => (<>
   <Composition id="StyleShowreel" component={StyleShowreel} durationInFrames={240} {...v} defaultProps={styleShowreelDefaults} />
   <Composition id="PopTeaser" component={PopTeaser} durationInFrames={popTeaserDuration(popTeaserDefaults)} {...v} defaultProps={popTeaserDefaults} />
   <Composition id="TalkingOverlay" component={TalkingOverlay} durationInFrames={talkingOverlayDuration(talkingOverlayDefaults)} {...v} defaultProps={talkingOverlayDefaults} />
-  <Composition id="CutoutStage" component={CutoutStage} durationInFrames={cutoutStageDuration(cutoutStageDefaults)} {...v} defaultProps={cutoutStageDefaults} />
+  <Composition id="CutoutStage" component={CutoutStage} durationInFrames={cutoutStageDuration(cutoutStageDefaults)} {...v} defaultProps={cutoutStageDefaults} calculateMetadata={({ props }) => ({ durationInFrames: cutoutStageDuration(props) })} />
 </>);
