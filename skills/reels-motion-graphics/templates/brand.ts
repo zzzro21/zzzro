@@ -9,6 +9,7 @@
 // Studio 미리보기는 STUDIO_CHANNEL 값을 따른다.
 // 자세한 스타일 규칙: skills/reels-motion-graphics/styles/<채널>.md
 import { getInputProps } from "remotion";
+import { FONTS } from "./fonts"; // 글꼴 포함 + 로딩 대기
 
 export type ChannelId = "instagram" | "youtube-shorts" | "youtube-long" | "kids-english";
 
@@ -18,7 +19,7 @@ export const BRAND_CORE = {
   text: "#FFFFFF",
   accent: "#FF4D2E",
   muted: "#8A8A93",
-  font: "'Pretendard', 'Noto Sans KR', 'Noto Sans CJK KR', sans-serif",
+  font: FONTS.ko,
   handle: "@reelbuilder_",
 };
 

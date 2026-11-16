@@ -33,6 +33,8 @@ def main() -> None:
     ap.add_argument("--key", type=int, default=57, help="근음 MIDI (57=A3, A단조)")
     ap.add_argument("--seed", type=int, default=7)
     ap.add_argument("--out", default="bgm.wav")
+    ap.add_argument("--mood", choices=["drive", "bright"], default="drive",
+                    help="drive=단조 일렉트로닉(기본), bright=장조·마림바·부드러운 드럼(아이용·밝은 영상)")
     a = ap.parse_args()
 
     rnd = random.Random(a.seed)
@@ -44,8 +46,11 @@ def main() -> None:
     drop_t = 4 * bar  # 드롭 시작 시각
     end_t = a.seconds - bar  # 마지막 마디는 엔딩
 
-    # i - VI - III - VII (Am F C G)
-    prog = [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]]
+    bright = a.mood == "bright"
+    if bright and a.key == 57:
+        a.key = 60  # C major
+    # drive: i - VI - III - VII (Am F C G) / bright: I - V - vi - IV (C G Am F)
+    prog = [[0, 4, 7], [7, 11, 14], [9, 12, 16], [5, 9, 12]] if bright else [[0, 3, 7], [-4, 0, 3], [3, 7, 10], [-2, 2, 5]]
 
     L = [0.0] * n
     R = [0.0] * n
@@ -84,11 +89,11 @@ def main() -> None:
             break
         in_drop = drop_t <= t0 < end_t
         # 킥 (드롭 구간 매 비트 + 엔딩 첫 박)
-        if in_drop or abs(t0 - end_t) < 1e-6:
+        if (in_drop and (not bright or b % 2 == 0)) or abs(t0 - end_t) < 1e-6:
             for j in range(int(0.35 * SR)):
                 tt = j / SR
                 f = 45 + 110 * math.exp(-tt * 28)
-                v = math.sin(2 * math.pi * f * tt) * math.exp(-tt * 7) * 0.9
+                v = math.sin(2 * math.pi * f * tt) * math.exp(-tt * 7) * (0.55 if bright else 0.9)
                 add(int(t0 * SR) + j, v, v)
         # 하이햇 (엇박) — 인트로부터
         if t0 < end_t:
@@ -100,7 +105,7 @@ def main() -> None:
         if in_drop and b % 2 == 1:
             for j in range(int(0.18 * SR)):
                 tt = j / SR
-                v = (rnd.random() * 2 - 1) * math.exp(-tt * 22) * 0.35
+                v = (rnd.random() * 2 - 1) * math.exp(-tt * (45 if bright else 22)) * (0.18 if bright else 0.35)
                 add(int(t0 * SR) + j, v, v * 0.9)
         # 베이스 (드롭 구간 8분음표, 코드 근음)
         if in_drop:
@@ -115,12 +120,31 @@ def main() -> None:
                     v = sq * 0.22 * min(1, tt * 200) * math.exp(-tt * 3)
                     add(int(ts * SR) + j, v, v)
 
+    # --- 마림바 아르페지오 (bright): 8분음표로 코드음 위아래, 인트로부터 ---
+    if bright:
+        pattern = [0, 1, 2, 1, 2, 0, 1, 2]
+        steps = int(a.seconds / (spb / 2))
+        for k in range(steps):
+            ts = k * spb / 2
+            if ts >= end_t:
+                break
+            ch = prog[int(ts / bar) % 4]
+            note = a.key + 12 + ch[pattern[k % 8]] + (12 if k % 16 >= 12 else 0)
+            f = note_hz(note)
+            g = 0.16 if ts >= drop_t else 0.11
+            pan = 0.35 + 0.3 * ((k % 4) / 3)
+            for j in range(int(0.45 * SR)):
+                tt = j / SR
+                env = math.exp(-tt * 9) * min(1, tt * 800)
+                v = (math.sin(2 * math.pi * f * tt) + 0.35 * math.sin(2 * math.pi * f * 4 * tt) * math.exp(-tt * 30)) * env * g
+                add(int(ts * SR) + j, v * pan * 2, v * (1 - pan) * 2)
+
     # --- 라이저 (빌드업 2마디: 노이즈 볼륨↑ + 상승 사인) ---
     rs, re_ = int(intro_end * SR), int(drop_t * SR)
     for i in range(rs, min(re_, n)):
         p = (i - rs) / (re_ - rs)
         tt = (i - rs) / SR
-        v = (rnd.random() * 2 - 1) * 0.12 * p ** 2 + math.sin(2 * math.pi * (300 + 900 * p * p) * tt) * 0.05 * p
+        v = (rnd.random() * 2 - 1) * (0.05 if bright else 0.12) * p ** 2 + math.sin(2 * math.pi * (300 + 900 * p * p) * tt) * (0.025 if bright else 0.05) * p
         L[i] += v
         R[i] += v
 
