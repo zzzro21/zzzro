@@ -12,7 +12,8 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 
 1. **채널을 정한다**: 개인 인스타 / 유튜브 쇼츠 / 유튜브 롱폼 / 어린이 영어 앱. 요청에 없으면 한 번 묻는다 ("어디에 쓸 영상인가요?").
    - 그 채널의 `styles/instagram.md` · `styles/youtube-shorts.md` · `styles/youtube-long.md` · `styles/kids-english.md` 를 읽는다.
-   - 영어 앱의 학습 게임·그림책 장면·단어 영상이면 `kids-english` (앱 브랜드 색, `ReadAlong.tsx`).
+   - 영어 앱의 학습 게임·그림책 장면·단어 영상이면 `kids-english` (`ReadAlong.tsx` + skin: storybook / doodle / chalk / neon). 같은 내용을 여러 스타일로 원하면 skin 만 바꿔 렌더하거나 `StyleShowreel.tsx`.
+   - 수학 공식·풀이는 chalk skin 을 우선 고려한다.
    - 코드는 `templates/brand.ts` 의 프로필을 쓰고, 렌더할 때 `--props='{"channel":"<채널>"}'` 를 붙인다. (크기·안전영역·글자·속도가 자동으로 바뀜)
    - 같은 내용을 여러 채널로 원하면 채널마다 따로 렌더하고, **롱폼은 문장을 짧게 나누지 말고 정보 밀도를 유지**, 쇼츠는 더 쪼갠다.
 2. 프로젝트 루트의 `motion-style.md` (세 채널 공통 브랜드: 색·폰트·핸들·하지 말 것) 를 읽는다. 없으면 `motion-style.example.md` 를 복사해 만들고, 색·폰트를 물어본 뒤 `templates/brand.ts` 의 `BRAND_CORE` 에도 같은 값을 넣는다.
