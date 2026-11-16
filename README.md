@@ -18,3 +18,4 @@
 | 자료 | 출처 |
 | --- | --- |
 | [클로드한테 인스타 운영 맡기는 법](references/claude-instagram-agent-skill-guide.md) | 최고수준 (@highestlevel33) |
+| [바이럴 모션 프롬프트 362개 분석](skills/reels-motion-graphics/references/prompt-patterns.md) | [awesome-opus5-5-videos](https://github.com/yihui-dev/awesome-opus5-5-videos) |
