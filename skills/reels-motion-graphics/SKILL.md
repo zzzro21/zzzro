@@ -75,7 +75,20 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 - 같이 생기는 `bgm.beats.json` 의 `beats / buildup / drop / ending` 프레임에 컷·플래시·슬램을 맞춘다.
 - 구성: 인트로 2마디 → 빌드업 2마디(라이저) → **드롭에서 핵심 정보 공개** → 마지막 1마디 엔딩 스팅. 예시: `templates/BeatDayAnswer.tsx`
 - `<Audio src={staticFile("bgm.wav")} />` 로 넣는다. 렌더 후 영상에 오디오 스트림이 있는지 확인한다.
-- 사용자가 음원을 주면 그 BPM 을 물어보고(모르면 추정) 같은 비트 그리드를 쓴다.
+- 사용자가 음원을 주면 `tools/analyze_reference.py 음원파일 --out ref/` 로 **BPM·비트·강한 타격·드롭 후보를 숫자로** 뽑아 그 프레임에 맞춘다. (클로드는 소리를 못 듣지만 파형 숫자로 맞출 수 있다)
+- 효과음은 `tools/synth_sfx.py --out public/sfx` (whoosh·hit·pop·click·stamp·ding·tick). **움직임이 착지하는 프레임**에 둔다. 예시: `templates/StatsLaunch.tsx`
+
+### 레퍼런스 영상을 받으면
+
+1. `python3 tools/analyze_reference.py 레퍼런스.mp4 --out ref/` 실행.
+2. `ref/cuts.png`(장면별 1장)와 `ref/timeline.png`(1초 1장)를 **직접 열어 본다.** 색·폰트 굵기·구도·여백·강조 방식을 표로 정리.
+3. `ref/analysis.json` 의 컷 수·평균 장면 길이·BPM·`cutsOnBeat`(컷이 비트에 맞는 비율)으로 **리듬**을 정리.
+4. 이 둘을 스토리보드 표에 반영해 사용자 확인을 받는다. 레퍼런스의 로고·캐릭터·문구를 그대로 베끼지 않고 **스타일과 리듬만** 가져온다.
+
+### 실적·숫자 PV
+
+- 회사 소개, 실적, 매출 그래프 → `templates/StatsLaunch.tsx` (KPI 카운트업 → 막대그래프 → 드롭 성장률 → 로고 도장).
+- 숫자는 사용자가 준 것만. 데모·가상 수치면 `fictional` 로 화면에 **'※ 가상 데이터'** 를 표시한다.
 
 `motion-style.md` 의 '하지 말 것' 에 걸리는 효과(예: 글리치 금지)는 요청이 있어도 먼저 확인한다.
 
