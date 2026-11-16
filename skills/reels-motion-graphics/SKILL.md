@@ -68,6 +68,15 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 | 형광펜, 마커, 연필, 붓, 수채화 | p5.brush | `templates/BrushHighlight.tsx` |
 | AI 생각 중, 로딩, 분석 중, 검색 중 | thinking-orbs | `templates/ThinkingOrbs.tsx` |
 
+### BGM · 비트 싱크
+
+- 사용자가 BGM 을 원하고 음원을 주지 않으면 `tools/synth_bgm.py` 로 **코드로 합성**한다 (파이썬 기본 라이브러리만, 저작권 걱정 없음).
+  `python3 tools/synth_bgm.py --bpm 120 --seconds <길이> --fps 30 --out public/bgm.wav`
+- 같이 생기는 `bgm.beats.json` 의 `beats / buildup / drop / ending` 프레임에 컷·플래시·슬램을 맞춘다.
+- 구성: 인트로 2마디 → 빌드업 2마디(라이저) → **드롭에서 핵심 정보 공개** → 마지막 1마디 엔딩 스팅. 예시: `templates/BeatDayAnswer.tsx`
+- `<Audio src={staticFile("bgm.wav")} />` 로 넣는다. 렌더 후 영상에 오디오 스트림이 있는지 확인한다.
+- 사용자가 음원을 주면 그 BPM 을 물어보고(모르면 추정) 같은 비트 그리드를 쓴다.
+
 `motion-style.md` 의 '하지 말 것' 에 걸리는 효과(예: 글리치 금지)는 요청이 있어도 먼저 확인한다.
 
 ## 4-1. 바이럴 프롬프트에서 배운 규칙
