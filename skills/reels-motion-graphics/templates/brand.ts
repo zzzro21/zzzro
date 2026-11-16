@@ -10,7 +10,7 @@
 // 자세한 스타일 규칙: skills/reels-motion-graphics/styles/<채널>.md
 import { getInputProps } from "remotion";
 
-export type ChannelId = "instagram" | "youtube-shorts" | "youtube-long";
+export type ChannelId = "instagram" | "youtube-shorts" | "youtube-long" | "kids-english";
 
 // ── 세 채널 공통 브랜드 (여기만 바꾸면 전 채널 반영) ──────────────────
 export const BRAND_CORE = {
@@ -39,9 +39,10 @@ export type Profile = {
   };
   energy: "high" | "medium" | "calm"; // 플래시·흔들림·글리치 허용 정도
   loop: boolean; // 마지막 프레임 = 첫 프레임
+  palette?: Partial<typeof BRAND_CORE> & { colors?: string[] }; // 채널 전용 색 (앱 브랜드 등)
 };
 
-export const PROFILES: Record<ChannelId, Profile> = {
+export const PROFILES = {
   // 개인 인스타 릴스: 저장·공유 유도, 따뜻하고 깔끔, 프로필 그리드(3:4) 썸네일 고려
   instagram: {
     id: "instagram",
@@ -81,6 +82,27 @@ export const PROFILES: Record<ChannelId, Profile> = {
     energy: "calm",
     loop: false,
   },
+} as Record<ChannelId, Profile>;
+
+// 어린이 영어 앱 (학습 게임·그림책 장면): 이 채널만 앱 브랜드 색을 쓴다
+PROFILES["kids-english"] = {
+  id: "kids-english",
+  label: "어린이 영어 앱",
+  width: 1920,
+  height: 1080,
+  fps: 30,
+  safe: { top: 80, bottom: 80, left: 100, right: 100, side: 100 },
+  type: { headline: 140, title: 96, body: 72, caption: 44 },
+  pace: { stagger: 8, enter: 12, sceneSec: [2.5, 5], bpm: 100 },
+  energy: "medium",
+  loop: false,
+  palette: {
+    bg: "#FFF6E5",
+    text: "#2B2D42",
+    accent: "#FF8A3D",
+    muted: "#8D8FA3",
+    colors: ["#FF8A3D", "#3DA5FF", "#5CC96B", "#FFC83D", "#B07CFF"],
+  },
 };
 
 // Studio 미리보기에서 볼 채널 (렌더 때는 --props 의 channel 이 우선)
@@ -91,5 +113,5 @@ export const CHANNEL: ChannelId = fromProps && fromProps in PROFILES ? fromProps
 export const PROFILE: Profile = PROFILES[CHANNEL];
 
 // 기존 템플릿 호환용 (BRAND / SAFE 이름 그대로 사용)
-export const BRAND = BRAND_CORE;
+export const BRAND = { ...BRAND_CORE, ...(PROFILE.palette ?? {}) };
 export const SAFE = PROFILE.safe;

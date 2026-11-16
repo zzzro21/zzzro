@@ -1,6 +1,6 @@
 ---
 name: reels-motion-graphics
-description: 개인 인스타 릴스·유튜브 쇼츠(9:16)·유튜브 롱폼(16:9) 3채널용 모션그래픽(키네틱 타이포, 자막 강조, 숫자 카운트업, 리스트, 챕터 카드, 하단 자막바, 로고 엔딩)을 Remotion 코드로 만들어 MP4로 렌더한다. "모션그래픽 만들어줘", "릴스/쇼츠 인트로", "유튜브 챕터 카드", "자막 애니메이션", "타이포 영상", "/motion" 요청에 사용. remotion-best-practices 스킬과 함께 쓰며, 채널별 규칙은 styles/ 를, 공통 브랜드는 motion-style.md 를 따른다.
+description: 개인 인스타 릴스·유튜브 쇼츠(9:16)·유튜브 롱폼(16:9)·어린이 영어 앱(학습 게임·그림책 장면)용 모션그래픽(키네틱 타이포, 자막 강조, 숫자 카운트업, 리스트, 챕터 카드, 하단 자막바, 로고 엔딩)을 Remotion 코드로 만들어 MP4로 렌더한다. "모션그래픽 만들어줘", "릴스/쇼츠 인트로", "유튜브 챕터 카드", "자막 애니메이션", "타이포 영상", "/motion" 요청에 사용. remotion-best-practices 스킬과 함께 쓰며, 채널별 규칙은 styles/ 를, 공통 브랜드는 motion-style.md 를 따른다.
 ---
 
 # 릴스 모션그래픽 스킬
@@ -10,8 +10,9 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 
 ## 0. 작업 시작 전 반드시 할 일
 
-1. **채널을 정한다**: 개인 인스타 / 유튜브 쇼츠 / 유튜브 롱폼. 요청에 없으면 한 번 묻는다 ("어디에 올릴 영상인가요?").
-   - 그 채널의 `styles/instagram.md` · `styles/youtube-shorts.md` · `styles/youtube-long.md` 를 읽는다.
+1. **채널을 정한다**: 개인 인스타 / 유튜브 쇼츠 / 유튜브 롱폼 / 어린이 영어 앱. 요청에 없으면 한 번 묻는다 ("어디에 쓸 영상인가요?").
+   - 그 채널의 `styles/instagram.md` · `styles/youtube-shorts.md` · `styles/youtube-long.md` · `styles/kids-english.md` 를 읽는다.
+   - 영어 앱의 학습 게임·그림책 장면·단어 영상이면 `kids-english` (앱 브랜드 색, `ReadAlong.tsx`).
    - 코드는 `templates/brand.ts` 의 프로필을 쓰고, 렌더할 때 `--props='{"channel":"<채널>"}'` 를 붙인다. (크기·안전영역·글자·속도가 자동으로 바뀜)
    - 같은 내용을 여러 채널로 원하면 채널마다 따로 렌더하고, **롱폼은 문장을 짧게 나누지 말고 정보 밀도를 유지**, 쇼츠는 더 쪼갠다.
 2. 프로젝트 루트의 `motion-style.md` (세 채널 공통 브랜드: 색·폰트·핸들·하지 말 것) 를 읽는다. 없으면 `motion-style.example.md` 를 복사해 만들고, 색·폰트를 물어본 뒤 `templates/brand.ts` 의 `BRAND_CORE` 에도 같은 값을 넣는다.
@@ -94,6 +95,10 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 
 - `templates/ForecastChart.tsx` + `references/forecast-film-prompt.md` 를 따른다. (실적 실선 / 전망 점선+범위 / 기관·발표 시점·기준일·출처 각주 / 정치 해석 중립)
 - 전망 숫자는 **사용자가 준 공식 자료만**. 없으면 묻고, 예시로 만들 땐 '예시 데이터' 도장.
+
+### 긴 작업이 중간에 끊기면
+
+- effort 가 높은 영상 작업은 20분 이상 걸릴 수 있다. API 끊김 등으로 멈추면 사용자는 "계속"만 보내면 된다 → 처음부터 다시 만들지 말고 **마지막으로 저장된 파일 상태에서 이어간다**. 장면을 끝낼 때마다 파일로 저장해 두어 이어가기 쉽게 한다.
 
 ### 오디오 마스터링 (납품 전)
 

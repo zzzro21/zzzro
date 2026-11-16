@@ -10,6 +10,7 @@ import { BeatDayAnswer, beatDayAnswerDefaults } from "./BeatDayAnswer";
 import { StatsLaunch, statsLaunchDefaults } from "./StatsLaunch";
 import { PixiGlitch, pixiGlitchDefaults } from "./PixiGlitch";
 import { ForecastChart, forecastChartDefaults } from "./ForecastChart";
+import { ReadAlong, readAlongDefaults, readAlongDuration } from "./ReadAlong";
 import { ChapterCard, chapterCardDefaults, LowerThird, lowerThirdDefaults } from "./LongformKit";
 // 채널(brand.ts)에 따라 크기가 자동으로 바뀜
 const v = { fps: PROFILE.fps, width: PROFILE.width, height: PROFILE.height };
@@ -26,4 +27,5 @@ export const RemotionRoot = () => (<>
   <Composition id="ChapterCard" component={ChapterCard} durationInFrames={75} {...v} defaultProps={chapterCardDefaults} />
   <Composition id="LowerThird" component={LowerThird} durationInFrames={120} {...v} defaultProps={lowerThirdDefaults} />
   <Composition id="ForecastChart" component={ForecastChart} durationInFrames={150} {...v} defaultProps={forecastChartDefaults} />
+  <Composition id="ReadAlong" component={ReadAlong} durationInFrames={readAlongDuration(readAlongDefaults)} {...v} defaultProps={readAlongDefaults} />
 </>);
