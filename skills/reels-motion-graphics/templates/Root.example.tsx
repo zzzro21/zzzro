@@ -13,6 +13,8 @@ import { ForecastChart, forecastChartDefaults } from "./ForecastChart";
 import { ReadAlong, readAlongDefaults, readAlongDuration } from "./ReadAlong";
 import { StyleShowreel, styleShowreelDefaults } from "./StyleShowreel";
 import { PopTeaser, popTeaserDefaults, popTeaserDuration } from "./PopTeaser";
+import { TalkingOverlay, talkingOverlayDefaults, talkingOverlayDuration } from "./TalkingOverlay";
+import { CutoutStage, cutoutStageDefaults, cutoutStageDuration } from "./CutoutStage";
 import { ChapterCard, chapterCardDefaults, LowerThird, lowerThirdDefaults } from "./LongformKit";
 // 채널(brand.ts)에 따라 크기가 자동으로 바뀜
 const v = { fps: PROFILE.fps, width: PROFILE.width, height: PROFILE.height };
@@ -32,4 +34,6 @@ export const RemotionRoot = () => (<>
   <Composition id="ReadAlong" component={ReadAlong} durationInFrames={readAlongDuration(readAlongDefaults)} {...v} defaultProps={readAlongDefaults} />
   <Composition id="StyleShowreel" component={StyleShowreel} durationInFrames={240} {...v} defaultProps={styleShowreelDefaults} />
   <Composition id="PopTeaser" component={PopTeaser} durationInFrames={popTeaserDuration(popTeaserDefaults)} {...v} defaultProps={popTeaserDefaults} />
+  <Composition id="TalkingOverlay" component={TalkingOverlay} durationInFrames={talkingOverlayDuration(talkingOverlayDefaults)} {...v} defaultProps={talkingOverlayDefaults} />
+  <Composition id="CutoutStage" component={CutoutStage} durationInFrames={cutoutStageDuration(cutoutStageDefaults)} {...v} defaultProps={cutoutStageDefaults} />
 </>);

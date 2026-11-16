@@ -76,6 +76,8 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 | 형광펜, 마커, 연필, 붓, 수채화 | p5.brush | `templates/BrushHighlight.tsx` |
 | AI 생각 중, 로딩, 분석 중, 검색 중 | thinking-orbs | `templates/ThinkingOrbs.tsx` |
 | 예고, 티저, 본편 홍보, 무료자료 홍보 (인스타) | — | `templates/PopTeaser.tsx` |
+| 내 촬영본 위 자막·스티커·말풍선·검색창 | — | `templates/TalkingOverlay.tsx` (투명 렌더 또는 합성) |
+| 배경 교체, 사람 뒤로 지나가는 글자, 누끼 | MediaPipe (`tools/person_matte.py`) | `templates/CutoutStage.tsx` |
 
 ### BGM · 비트 싱크
 
