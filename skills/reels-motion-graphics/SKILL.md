@@ -75,6 +75,7 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 | 순서대로, 안무, 글자 하나씩, 선이 그려지는 | Anime.js | `templates/AnimeTimeline.tsx` |
 | 형광펜, 마커, 연필, 붓, 수채화 | p5.brush | `templates/BrushHighlight.tsx` |
 | AI 생각 중, 로딩, 분석 중, 검색 중 | thinking-orbs | `templates/ThinkingOrbs.tsx` |
+| 예고, 티저, 본편 홍보, 무료자료 홍보 (인스타) | — | `templates/PopTeaser.tsx` |
 
 ### BGM · 비트 싱크
 
