@@ -90,6 +90,15 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 3. `ref/analysis.json` 의 컷 수·평균 장면 길이·BPM·`cutsOnBeat`(컷이 비트에 맞는 비율)으로 **리듬**을 정리.
 4. 이 둘을 스토리보드 표에 반영해 사용자 확인을 받는다. 레퍼런스의 로고·캐릭터·문구를 그대로 베끼지 않고 **스타일과 리듬만** 가져온다.
 
+### 정치·경제 전망치 그래프
+
+- `templates/ForecastChart.tsx` + `references/forecast-film-prompt.md` 를 따른다. (실적 실선 / 전망 점선+범위 / 기관·발표 시점·기준일·출처 각주 / 정치 해석 중립)
+- 전망 숫자는 **사용자가 준 공식 자료만**. 없으면 묻고, 예시로 만들 땐 '예시 데이터' 도장.
+
+### 오디오 마스터링 (납품 전)
+
+- 최종 MP4 는 `-14 LUFS / -2 dBTP` 목표로 `ffmpeg loudnorm` 처리 후 **다시 측정한 수치를 보고**한다. 명령은 `references/forecast-film-prompt.md`.
+
 ### 실적·숫자 PV
 
 - 회사 소개, 실적, 매출 그래프 → `templates/StatsLaunch.tsx` (KPI 카운트업 → 막대그래프 → 드롭 성장률 → 로고 도장).

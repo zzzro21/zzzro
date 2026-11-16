@@ -60,6 +60,9 @@ Claude 로 만든 바이럴 영상 703개의 프롬프트 중 **모션그래픽�
 | Opus 5.5 + Remotion + Gemini TTS, 1시간에 제품 광고 2편, "외주였으면 10만엔 이상" | 내레이션은 TTS(외부 API 키 필요)로 붙일 수 있다. 이 스킬은 TTS 를 내장하지 않으므로 사용자가 음성 파일을 주면 `<Audio>` 로 얹고 analyze 로 문장 시작 시각을 맞춘다 |
 | "Claude Code 마스코트 >>" | 캐릭터를 주인공으로 세우면 반응이 좋다. 단, **남의 캐릭터·로고는 그대로 쓰지 말고** 사용자 소유 캐릭터만 |
 
+| 「캐릭터는 예전에 Midjourney 로 만든 것, ElevenLabs 연결해두니 '나레이션 만들게요', '효과음도 만들까요?' 하며 자동 생성」 — Opus 5.5 + Remotion | **내 캐릭터 + 음성 API 연결** 이면 클로드가 나레이션·효과음까지 제안한다 → `styles/instagram.md` 캐릭터 숏폼 규칙 |
+| "$3,000 견적 받은 런칭 영상" — Opus 5.5(medium), HyperFrames + GSAP, 구조화된 한 번짜리 프롬프트 (스타일·카피·규칙·크래프트·음악·마스터링 섹션) | 프롬프트를 **섹션(STYLE/COPY/RULES/CRAFT/MUSIC)** 으로 나누고 "지어낸 결과 금지", "-14 LUFS 재측정" 같은 검수 기준까지 넣으면 한 번에 나온다 → 전망치 그래프용으로 바꾼 버전: `forecast-film-prompt.md` |
+
 ### 도구 메모: Remotion vs HyperFrames
 
 | | Remotion (이 스킬 기본) | HyperFrames (HeyGen, 오픈소스) |
