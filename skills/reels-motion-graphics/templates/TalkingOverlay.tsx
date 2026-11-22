@@ -13,6 +13,7 @@ import { AbsoluteFill, Audio, continueRender, delayRender, Easing, interpolate, 
 import { FONTS } from "./fonts";
 import { HandDefs, wobblyRect } from "./handdrawn";
 import { SAFE } from "./brand";
+import { Widget, WidgetView, WIDGET_TYPES } from "./InfoWidgets";
 
 type Ev =
   | { type: "search"; at: number; dur: number; query: string; suggestions?: string[] }
@@ -21,13 +22,21 @@ type Ev =
   | { type: "bubble"; at: number; dur: number; text: string; x: number; y: number; think?: boolean }
   | { type: "burst"; at: number; dur: number; text: string; x: number; y: number }
   | { type: "like"; at: number }        // 하트 카운터 +1
-  | { type: "label"; at: number; dur: number; text: string };
+  | { type: "label"; at: number; dur: number; text: string }
+  | Widget;                             // 정보 위젯 8종 (InfoWidgets.tsx)
 export type TalkingOverlayProps = {
   video?: string;                         // 내 영상 (없으면 투명)
   videoBlur?: number;                     // 미리보기용 흐림
   face: { x: number; y: number; w: number; h: number };
   captionArea: "lower" | "left" | "right";
   captions: { t: number; text: string }[];
+  captionMode?: "words" | "phrase";       // words: 단어씩 / phrase: 구절 통째로 (한국 토킹 릴스 스타일)
+  captionStyle?: "pop" | "pinkpop";       // pinkpop: 흰 글자 + 핵심어는 압축 글꼴 분홍·빛번짐
+  captionY?: number;                      // 자막 높이 (0~1), 기본 0.6
+  widgetY?: number;                       // 위젯 높이 (0~1), 기본 자막 아래
+  widgetX?: number;                       // 위젯 가로 중심 (0~1), 기본 0.46 (오른쪽 인스타 버튼 열 피함)
+  widgetScale?: number;                   // 위젯 크기 배율, 기본 1.4
+  scrim?: boolean;                        // 자막·위젯 뒤 옅은 어두운 띠 (밝은 배경·흰 옷에서 글자 살리기). phrase 모드 기본 켬
   events: Ev[];
   accent: string;                         // 강조 단어 색
   counterLabel: string;
@@ -79,8 +88,8 @@ export const TalkingOverlay: React.FC<TalkingOverlayProps> = (p) => {
   const t = frame / fps, u = W / 1080; // 1080 기준 크기 비율
   const [handle] = useState(() => delayRender("overlay font"));
   useLayoutEffect(() => {
-    const txt = p.captions.map((c) => c.text).join("") + p.events.map((e) => ("text" in e ? e.text : "query" in e ? e.query + (e.suggestions ?? []).join("") : "")).join("");
-    Promise.all([document.fonts.load(`900 80px Pretendard`, txt), document.fonts.load(`400 80px 'Black Han Sans'`, txt)]).finally(() => continueRender(handle));
+    const txt = p.captions.map((c) => c.text).join("") + JSON.stringify(p.events);
+    Promise.all([document.fonts.load(`900 80px Pretendard`, txt), document.fonts.load(`800 80px Pretendard`, txt), document.fonts.load(`400 80px 'Black Han Sans'`, txt), document.fonts.load(`400 80px 'Do Hyeon'`, txt)]).finally(() => continueRender(handle));
   }, [handle, p.captions, p.events]);
 
   // ── 자막: 3~4단어씩 묶어 한 덩어리, 단어가 말하는 순간 하나씩 등장 ──
@@ -109,6 +118,33 @@ export const TalkingOverlay: React.FC<TalkingOverlayProps> = (p) => {
     </div>
   );
 
+  // ── 구절 자막 (phrase 모드): 말하는 구절 전체를 한 번에, *핵심어* 는 강조 ──
+  let phraseEl: React.ReactNode = null;
+  if (p.captionMode === "phrase") {
+    const pi = p.captions.findLastIndex((c) => t >= c.t);
+    const ph = pi >= 0 ? p.captions[pi] : null, phEnd = pi >= 0 ? (p.captions[pi + 1]?.t ?? ph!.t + 2) : 0;
+    if (ph && t < phEnd) {
+      const k = pop(frame, fps, ph.t, 13), pink = p.accent;
+      const parts = ph.text.split(/(\*[^*]+\*)/).filter(Boolean);
+      phraseEl = (
+        <div style={{ position: "absolute", left: 40 * u, right: 150 * u, top: H * (p.captionY ?? 0.56), textAlign: "center", transform: `scale(${0.92 + 0.08 * k})`, opacity: Math.min(1, k * 2), whiteSpace: "pre-wrap" }}>
+          {parts.map((part, i) => {
+            const em = part.startsWith("*");
+            const txt = em ? part.slice(1, -1) : part;
+            return p.captionStyle === "pinkpop" ? (
+              <span key={i} style={{ fontFamily: em ? FONTS.tall : FONTS.ko, fontWeight: em ? 400 : 800, fontSize: (em ? 140 : 88) * u, lineHeight: 1.15, color: em ? pink : "#FFFFFF",
+                WebkitTextStroke: em ? `${3 * u}px #FFFFFF` : `${1.2 * u}px rgba(0,0,0,0.35)`, paintOrder: "stroke fill",
+                textShadow: em ? `0 0 ${16 * u}px ${pink}, 0 ${4 * u}px ${12 * u}px rgba(0,0,0,0.5)` : `0 ${3 * u}px ${10 * u}px rgba(0,0,0,0.65)`,
+                display: "inline-block", transform: em ? `translateY(${(1 - k) * 18 * u}px)` : undefined }}>{txt}</span>
+            ) : (
+              <span key={i} style={{ fontFamily: em ? FONTS.pop : FONTS.ko, fontWeight: em ? 400 : 900, fontSize: (em ? 120 : 84) * u, color: em ? pink : "#FFFFFF", textShadow: `0 ${4 * u}px ${14 * u}px rgba(0,0,0,0.55)` }}>{txt}</span>
+            );
+          })}
+        </div>
+      );
+    }
+  }
+
   // ── 이벤트 ──
   const likes = p.events.filter((e) => e.type === "like").map((e) => e.at);
   const likeCount = likes.filter((a) => t >= a).length, lastLike = likes.filter((a) => t >= a).pop();
@@ -117,6 +153,14 @@ export const TalkingOverlay: React.FC<TalkingOverlayProps> = (p) => {
   const S = (at: number, n: string, v = 0.6) => { if (p.sfx) sounds.push(<Sequence key={`${n}${at}`} from={Math.round(at * fps)} durationInFrames={40} layout="none"><Audio src={staticFile(`sfx/${n}.wav`)} volume={v} /></Sequence>); };
   p.events.forEach((e, idx) => {
     if (e.type === "like") { S(e.at, "pop", 0.5); return; }
+    if (WIDGET_TYPES.includes(e.type)) { // 정보 위젯: 자막 아래 가운데
+      const wd = e as Widget;
+      S(wd.at, wd.type === "comment" ? "click" : "pop", 0.45);
+      if (!live(t, wd.at, wd.dur)) return;
+      els.push(<div key={idx} style={{ position: "absolute", left: W * (p.widgetX ?? 0.46), top: H * (p.widgetY ?? ((p.captionY ?? 0.56) + 0.09)), transform: "translateX(-50%)", opacity: outK(t, wd.at, wd.dur) }}>
+        <WidgetView w={wd} t={t} frame={frame} fps={fps} u={u * (p.widgetScale ?? 1.4)} pink={p.accent} /></div>);
+      return;
+    }
     S(e.at, e.type === "stamp" ? "stamp" : e.type === "search" ? "click" : "pop", 0.55);
     if (!live(t, e.at, e.dur)) return;
     const k = pop(frame, fps, e.at), o = outK(t, e.at, e.dur);
@@ -173,8 +217,10 @@ export const TalkingOverlay: React.FC<TalkingOverlayProps> = (p) => {
       <HandDefs />
       {p.video && <OffthreadVideo src={staticFile(p.video)} style={{ width: "100%", height: "100%", objectFit: "cover", filter: p.videoBlur ? `blur(${p.videoBlur}px) brightness(0.9)` : undefined }} />}
       {sounds}
+      {(p.scrim ?? p.captionMode === "phrase") && (() => { const y0 = (p.captionY ?? 0.56) - 0.05, y1 = (p.widgetY ?? ((p.captionY ?? 0.56) + 0.09)) + 0.2;
+        return <div style={{ position: "absolute", left: 0, right: 0, top: H * y0, height: H * (y1 - y0), background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.32) 25%, rgba(0,0,0,0.32) 70%, rgba(0,0,0,0) 100%)", pointerEvents: "none" }} />; })()}
       {els}
-      {captions}
+      {p.captionMode === "phrase" ? phraseEl : captions}
       {likes.length > 0 && (
         <div style={{ position: "absolute", right: SAFE.right, top: SAFE.top, display: "flex", alignItems: "center", gap: 12 * u, padding: `${10 * u}px ${20 * u}px`, borderRadius: 40 * u, background: "rgba(15,15,20,0.72)", transform: `scale(${1 + 0.15 * Math.sin(Math.min(1, likeK) * Math.PI)})` }}>
           <svg width={40 * u} height={40 * u} viewBox="-100 -100 200 200"><path d="M0 80 Q-95 15 -90 -35 Q-80 -85 -30 -80 Q-8 -78 0 -50 Q8 -78 30 -80 Q80 -85 90 -35 Q95 15 0 80 Z" fill="#FF4F7B" /></svg>

@@ -34,6 +34,6 @@ export const RemotionRoot = () => (<>
   <Composition id="ReadAlong" component={ReadAlong} durationInFrames={readAlongDuration(readAlongDefaults)} {...v} defaultProps={readAlongDefaults} />
   <Composition id="StyleShowreel" component={StyleShowreel} durationInFrames={240} {...v} defaultProps={styleShowreelDefaults} />
   <Composition id="PopTeaser" component={PopTeaser} durationInFrames={popTeaserDuration(popTeaserDefaults)} {...v} defaultProps={popTeaserDefaults} />
-  <Composition id="TalkingOverlay" component={TalkingOverlay} durationInFrames={talkingOverlayDuration(talkingOverlayDefaults)} {...v} defaultProps={talkingOverlayDefaults} />
+  <Composition id="TalkingOverlay" component={TalkingOverlay} durationInFrames={talkingOverlayDuration(talkingOverlayDefaults)} {...v} defaultProps={talkingOverlayDefaults} calculateMetadata={({ props }) => ({ durationInFrames: talkingOverlayDuration(props) })} />
   <Composition id="CutoutStage" component={CutoutStage} durationInFrames={cutoutStageDuration(cutoutStageDefaults)} {...v} defaultProps={cutoutStageDefaults} calculateMetadata={({ props }) => ({ durationInFrames: cutoutStageDuration(props) })} />
 </>);
