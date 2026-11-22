@@ -53,6 +53,7 @@
 - 자막 바로 아래에 말에 맞춰 **정보 위젯** 하나씩 (`InfoWidgets.tsx`): `growth` 상승 그래프 · `pipeline` 단계 노드 · `connect` A ✓ B · `chat` 요청→완성 · `stopwatch` · `calendar` 날짜 배지 · `ring` 원형 카운터 · **`comment` 댓글창에 키워드 타이핑 → 전송 → 하트** (댓글 키워드로 자료 받는 흐름의 마지막 장면에 딱).
 - 밝은 배경·흰 옷이면 자막 뒤 옅은 어두운 띠(`scrim`)가 자동으로 깔린다.
 - 숫자 위젯(growth·ring·calendar)은 **실제 수치만**. 없으면 쓰지 않는다.
+- **모션 문법**(위젯은 아이디어 동안 유지, 흰 선 → 핵심어 순간 분홍 채움, 동시 배치, 블러 퇴장): `references/motion-grammar-talking.md` 를 반드시 따른다. 각 위젯에 `activateAt` = 자막 핵심어 시각.
 - 오른쪽 인스타 버튼 열을 피해 위젯 중심은 화면 46% 지점.
 
 ## 팝 티저 (PopTeaser)

@@ -157,7 +157,9 @@ export const TalkingOverlay: React.FC<TalkingOverlayProps> = (p) => {
       const wd = e as Widget;
       S(wd.at, wd.type === "comment" ? "click" : "pop", 0.45);
       if (!live(t, wd.at, wd.dur)) return;
-      els.push(<div key={idx} style={{ position: "absolute", left: W * (p.widgetX ?? 0.46), top: H * (p.widgetY ?? ((p.captionY ?? 0.56) + 0.09)), transform: "translateX(-50%)", opacity: outK(t, wd.at, wd.dur) }}>
+      const o = outK(t, wd.at, wd.dur);
+      els.push(<div key={idx} style={{ position: "absolute", left: W * (wd.x ?? p.widgetX ?? 0.46), top: H * (p.widgetY ?? ((p.captionY ?? 0.56) + 0.09)), transform: "translateX(-50%)",
+        opacity: o, filter: o < 1 ? `blur(${(1 - o) * 10 * u}px)` : undefined }}>
         <WidgetView w={wd} t={t} frame={frame} fps={fps} u={u * (p.widgetScale ?? 1.4)} pink={p.accent} /></div>);
       return;
     }
