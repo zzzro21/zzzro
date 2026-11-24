@@ -10,6 +10,8 @@ Remotion API 사용법은 `remotion-best-practices` 스킬을 따르고, 이 문
 
 ## 0. 작업 시작 전 반드시 할 일
 
+0. `LEARNINGS.md` (지금까지 배운 것 한 장 정리)를 먼저 훑는다.
+
 1. **채널을 정한다**: 개인 인스타 / 유튜브 쇼츠 / 유튜브 롱폼 / 어린이 영어 앱. 요청에 없으면 한 번 묻는다 ("어디에 쓸 영상인가요?").
    - 그 채널의 `styles/instagram.md` · `styles/youtube-shorts.md` · `styles/youtube-long.md` · `styles/kids-english.md` 를 읽는다.
    - 영어 앱의 학습 게임·그림책 장면·단어 영상이면 `kids-english` (`ReadAlong.tsx` + skin: storybook / doodle / chalk / neon). 같은 내용을 여러 스타일로 원하면 skin 만 바꿔 렌더하거나 `StyleShowreel.tsx`.
